@@ -1,0 +1,183 @@
+<ion-header>
+  <ion-toolbar>
+    <section class="p-4 flex items-center justify-between">
+      <button slot="start"
+        class="flex items-center text-gray-800 dark:text-gray-200 font-bold py-3 px-3 rounded-2xl ms-2">
+        <span class="material-symbols-rounded">
+          menu
+        </span>
+      </button>
+      <ion-avatar slot="end" class="me-4">
+        <img src="assets/images/avatar/man.png" alt="profile">
+      </ion-avatar>
+    </section>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="px-4">
+    <div class="header-text mt-2">
+      <h1 class="text-3xl text-gray-800 dark:text-gray-200 font-bold mt-2">Hola, {{username}}</h1>
+      <p class="text-gray-700 dark:text-gray-400">¡Ten un buen día!</p>
+    </div>
+
+    <div class="flex mb-6 mt-4">
+      <div class="flex-initial w-full">
+        <div class="relative w-full">
+          <input type="text"
+            class="border border-gray-300 bg-blue-50 rounded-2xl py-2 px-4 w-full pl-12 h-12 text-gray-800 dark:text-gray-200 dark:bg-gray-700"
+            placeholder="Search">
+          <span class="material-symbols-rounded absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            search
+          </span>
+        </div>
+      </div>
+      <div class="flex-none">
+        <button
+          class="flex items-center bg-blue-50 hover:bg-blue-200 border border-solid border-gray-300 dark:border-gray-300 py-3 px-3 rounded-2xl ms-2 h-12 dark:bg-gray-700 dark:hover:bg-gray-500">
+          <span class="material-symbols-rounded text-blue-700 dark:text-blue-400">
+            tune
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <ion-segment [(ngModel)]="selectedTab" (ionChange)="segmentChanged($event)" class="bg-blue-200 dark:bg-gray-700 ">
+      <ion-segment-button value="tareas" >
+        <p>Mis tareas</p>
+      </ion-segment-button>
+      <ion-segment-button value="proyectos">
+        <p>Proyectos</p>
+      </ion-segment-button>
+      <ion-segment-button value="notas">
+        <p>Notas</p>
+      </ion-segment-button>
+    </ion-segment>
+
+    @if (selectedTab === 'tareas') {
+      <div class="mt-4">
+        <button class="flex items-center text-gray-800 dark:text-gray-200 font-bold py-3 px-3 rounded-2xl ms-2" (click)="openFormModal('tarea')">Añadir Tarea</button>
+      </div>
+    <section class="mt-4 card-container">
+      @for (tarea of tareas; track $index) {
+        <div (click)="openModal('tarea',  tarea.title, tarea.content, tarea.date)">
+          <div class="card-proy p-6 bg-blue-500 rounded-[3rem] dark:bg-gray-800 w-56 h-72">
+            <div class="flex text-center">
+              <div class="flex-initial me-2">
+                <span class="material-symbols-rounded text-6xl text-white bg-blue-400 rounded-3xl dark:bg-gray-700">
+                  task
+                </span>
+              </div>
+              <div class="flex-initial mt-4">
+                <h1 class="text-xl text-white dark:text-gray-200 font-bold mb-4">{{truncateText(tarea.title,8)}}</h1>
+              </div>
+            </div>
+            <div class="text-center mt-4">
+              <p class="text-gray-50 dark:text-gray-300 text-justify">{{truncateText(tarea.content,80)}}</p> <br>
+              <p class="text-gray-50 dark:text-gray-300 font-bold">{{tarea.date}}</p>
+            </div>
+            <button
+            class="mt-2 bg-red-500 text-white px-3 py-1 rounded-lg"
+            (click)="deleteItem('tarea', $index)"
+          >
+            Eliminar
+          </button>
+          </div>
+        </div>
+      }
+    </section>  
+    }
+
+    @if (selectedTab === 'proyectos') {
+      <div class="mt-4">
+        <button class="flex items-center text-gray-800 dark:text-gray-200 font-bold py-3 px-3 rounded-2xl ms-2" (click)="openFormModal('proyecto')">Añadir Proyecto</button>
+      </div>
+    <section class="mt-4 card-container">
+      @for (proyecto of proyectos; track $index) {
+        <div (click)="openModal('proyecto', proyecto.title, proyecto.content, proyecto.date)">
+          <div class="card-proy p-6 bg-blue-500 rounded-[3rem] dark:bg-gray-800 w-56 h-72">
+            <div class="flex text-center">
+              <div class="flex-initial me-2">
+                <span class="material-symbols-rounded text-6xl text-white bg-blue-400 rounded-3xl dark:bg-gray-700">
+                  business_center
+                </span>
+              </div>
+              <div class="flex-initial mt-4">
+                <h1 class="text-xl text-white dark:text-gray-200 font-bold mb-4">{{truncateText(proyecto.title,10)}}</h1>
+              </div>
+            </div>
+            <div class="text-center mt-4">
+              <p class="text-gray-50 dark:text-gray-300 text-justify">{{truncateText(proyecto.content,75)}}</p><br>
+              <p class="text-gray-50 dark:text-gray-300">{{proyecto.date}}</p>
+            </div>
+            <button
+            class="mt-2 bg-red-500 text-white px-3 py-1 rounded-lg"
+            (click)="deleteItem('proyecto', $index)"
+          >
+            Eliminar
+          </button>
+          </div>
+        </div>
+      }
+    </section>
+    <section class="mt-4">
+      <h1 class="text-2xl text-black dark:text-white font-bold mb-4">Proceso</h1>
+
+      <div class="card p-6 bg-blue-50 rounded-3xl shadow-md dark:bg-gray-600 h-32">
+        <div class="flex text-center justify-between">
+          <div class="flex-initial">
+            <span
+              class="material-symbols-rounded text-4xl text-blue-500 dark:text-blue-400 bg-white rounded-3xl dark:bg-gray-700 h-16 w-16 px-3 py-3">
+              description
+            </span>
+          </div>
+          <div class="flex-initial mt-3">
+            <p class="font-bold">Nombre del proyecto</p>
+            <p class="text-muted">2 días atras</p>
+          </div>
+          <div class="flex-initial">
+            <span
+              class="material-symbols-rounded text-4xl text-blue-500 dark:text-blue-400 rounded-3xl h-16 w-16 px-3 py-3 ">
+              more_vert
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+    }
+    @if (selectedTab === 'notas') {
+      <div class="mt-4">
+        <button class="flex items-center text-gray-800 dark:text-gray-200 font-bold py-3 px-3 rounded-2xl ms-2" (click)="openFormModal('nota')">Añadir Nota</button>
+      </div>
+    <section class="mt-4 card-container">
+      @for (nota of notas; track $index) {
+        <div (click)="openModal('nota',  nota.title, nota.content, nota.date)">
+          <div class="card-proy p-6 bg-blue-500 rounded-[3rem] dark:bg-gray-800 w-56 h-72">
+            <div class="flex text-center">
+              <div class="flex-initial me-2">
+                <span class="material-symbols-rounded text-6xl text-white bg-blue-400 rounded-3xl dark:bg-gray-700">
+                  description
+                </span>
+              </div>
+              <div class="flex-initial mt-4">
+                <h1 class="text-xl text-white dark:text-gray-200 font-bold mb-4">{{truncateText(nota.title,6)}}</h1>
+              </div>
+            </div>
+            <div class="text-center mt-4">
+              <p class="text-gray-50 dark:text-gray-300 text-justify">{{truncateText(nota.content,70)}}</p><br>
+              <p class="text-gray-50 dark:text-gray-300">{{nota.date}}</p>
+            </div>
+            <button
+            class="mt-2 bg-red-500 text-white px-3 py-1 rounded-lg"
+            (click)="deleteItem('nota', $index)"
+          >
+            Eliminar
+          </button>
+          </div>
+        </div>
+      }
+    </section>
+    }
+  </section>
+</ion-content>
