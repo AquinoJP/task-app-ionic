@@ -12,6 +12,8 @@ import { FormAggActiPage } from '../components/form-agg-acti/form-agg-acti.page'
   styleUrls: ['tab1.page.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule,IonicModule],
+  encapsulation: ViewEncapsulation.None // Desactiva el encapsulamiento
+
 })
 export class Tab1Page implements OnInit{
 
